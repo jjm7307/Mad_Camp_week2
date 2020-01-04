@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Mad_Camp_week2</string>
+
+
+    <string name="facebook_app_id">3093386894024526</string>
+    <string name="fb_login_protocol_scheme">fb3093386894024526</string>
+
+
+</resources>
