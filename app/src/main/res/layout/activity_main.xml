@@ -3,29 +3,80 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="30dp" />
-    <ImageView
-        android:id="@+id/facebook_profile"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity = "center"
-        android:layout_marginBottom="100dp"
-        />
-    <TextView
-        android:id="@+id/facebook_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="facebook_id"
-        android:layout_gravity = "center"
-         />
+    <LinearLayout
+        android:id="@+id/backcolor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#0e0f0a"
+        tools:context=".MainActivity">
+
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tablayout"
+            android:layout_width="match_parent"
+            android:layout_height="72dp"
+            app:tabPaddingTop="50dp"
+            app:tabPaddingBottom="5dp"
+            android:paddingBottom="0dp"
+            android:background="@drawable/radius_set"
+            app:tabTextColor="#EEEEEE">
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></androidx.viewpager.widget.ViewPager>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="59dp"
+        android:orientation="horizontal"
+        android:weightSum="3">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+                <ImageView
+                    android:layout_width="59dp"
+                    android:layout_height="59dp"
+                    android:scaleType="fitCenter"
+                    android:layout_marginTop="2dp"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/icon_contact" />
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="5dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_photo" />
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="38dp"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_gift" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+
 
 </FrameLayout>

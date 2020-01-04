@@ -1,9 +1,7 @@
 <resources>
-    <string name="app_name">Mad_Camp_week2</string>
+    <string name="app_name">선물주세요</string>
 
-
-    <string name="facebook_app_id">3093386894024526</string>
-    <string name="fb_login_protocol_scheme">fb3093386894024526</string>
-
-
+    <string name="tab_text_3">Gifts</string>
+    <string name="tab_text_2">Images</string>
+    <string name="tab_text_1">Contacts</string>
 </resources>

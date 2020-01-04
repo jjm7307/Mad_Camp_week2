@@ -1,134 +1,84 @@
 package com.example.mad_camp_week2;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.media.Image;
+import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import com.example.mad_camp_week2.Retrofit.IMyservice;
-import com.example.mad_camp_week2.Retrofit.RetrofitClient;
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.squareup.picasso.Picasso;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-
-import io.reactivex.disposables.CompositeDisposable;
-import retrofit2.Retrofit;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+import com.example.mad_camp_week2.adapters.ViewPagerAdapter;
+import com.example.mad_camp_week2.fragments.FragmentContacts;
+import com.example.mad_camp_week2.fragments.FragmentImage;
+import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
 
-    /*CompositeDisposable compositeDisposable = new CompositeDisposable();
-    IMyservice iMyService;
+  private TabLayout tabLayout;
+  private ViewPager viewPager;
+  private static MediaPlayer mp;
+  int click = 0;
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+  private BackPressCloseHandler backPressCloseHandler;
+
+  @Override
+  public void onBackPressed() {
+    backPressCloseHandler.onBackPressed();
+  }
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    backPressCloseHandler = new BackPressCloseHandler(this);
 
 
-        Retrofit retrofitClient = RetrofitClient.getInstance();
-        iMyService = retrofitClient.create(IMyservice.class);
-    }*/
-    CallbackManager callbackManager;
-    TextView facebook_id;
-    ProgressDialog mDialog;
-    ImageView facebook_profile;
 
-    @Override
-    protected void onActivityResult (int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        callbackManager.onActivityResult(requestCode,resultCode,data);
-    }
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    tabLayout = findViewById(R.id.tablayout);
+    viewPager = findViewById(R.id.viewpager);
 
-        callbackManager = CallbackManager.Factory.create();
 
-        facebook_id = (TextView)findViewById(R.id.facebook_id);
-        facebook_profile = (ImageView)findViewById(R.id.facebook_profile);
+    ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
-        loginButton.setReadPermissions(Arrays.asList("public_profile","email"));
+    adapter.addFragment(new FragmentContacts(), "Contacts");
+    adapter.addFragment(new FragmentImage(), "Images");
+    adapter.addFragment(new FragmentContacts(), "gift box");
 
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                mDialog = new ProgressDialog(MainActivity.this);
-                mDialog.setMessage("Retrieving data...");
-                mDialog.show();
+    viewPager.setAdapter(adapter);
+    viewPager.setOffscreenPageLimit(3);
 
-                String accesstoken = loginResult.getAccessToken().getToken();
+    tabLayout.setupWithViewPager(viewPager);
+  }
 
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        mDialog.dismiss();
+  public class BackPressCloseHandler{
 
-                        getData(object);
-                    }
-                });
+    private long backKeyPressedTime = 0;
+    private Toast toast;
 
-                //Request Graph API
-                Bundle parameters = new Bundle();
-                parameters.putString("fields","id");
-                request.setParameters(parameters);
-                request.executeAsync();
-            }
+    private Activity activity;
 
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
-
-        if(AccessToken.getCurrentAccessToken() != null)
-        {
-            //Just set when already login
-
-            facebook_id.setText(AccessToken.getCurrentAccessToken().getUserId());
-
-        }
+    public BackPressCloseHandler(Activity context){
+      this.activity = context;
     }
 
-    private void getData(JSONObject object) {
-        try{
-            URL profile_picture = new URL("http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250");
-            Picasso.get().load(profile_picture.toString()).into(facebook_profile);
-
-            facebook_id.setText(object.getString("id"));
-            Log.d("%%%%%%%%%%###################",object.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void onBackPressed(){
+      if(System.currentTimeMillis() > backKeyPressedTime + 2000){
+        backKeyPressedTime = System.currentTimeMillis();
+        showGuide();
+        return;
+      }
+      if(System.currentTimeMillis() <= backKeyPressedTime + 2000){
+        activity.finish();
+        toast.cancel();
+      }
     }
+
+    public void showGuide(){
+      toast = Toast.makeText(getApplicationContext(), "뒤로 버튼을 한번 더 누르시면 종료됩니다. ", Toast.LENGTH_SHORT);
+      toast.show();
+    }
+  }
 }
