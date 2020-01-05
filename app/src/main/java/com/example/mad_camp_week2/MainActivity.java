@@ -9,13 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import com.example.mad_camp_week2.adapters.ViewPagerAdapter;
 import com.example.mad_camp_week2.fragments.FragmentContacts;
-import com.example.mad_camp_week2.fragments.FragmentImage;
+import com.example.mad_camp_week2.fragments.FragmentGallery;
 import com.google.android.material.tabs.TabLayout;
 
 public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public FragmentGallery fragmentGallery = new FragmentGallery();
 
     private BackPressCloseHandler backPressCloseHandler;
 
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(new FragmentContacts(), "Contacts");
-        adapter.addFragment(new FragmentImage(), "Images");
+        adapter.addFragment(fragmentGallery, "Images");
         adapter.addFragment(new FragmentContacts(), "gift box");
 
         viewPager.setAdapter(adapter);

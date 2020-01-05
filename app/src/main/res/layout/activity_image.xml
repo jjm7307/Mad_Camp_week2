@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="10"
+    android:orientation="vertical"
+    tools:context=".ImageActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="#FFFFFF"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/img_title"
+            android:textColor="#000000"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Image_Title"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:textSize="20dp"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.github.chrisbanes.photoview.PhotoView
+                android:id="@+id/photoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+<!--            <ImageView-->
+<!--                android:layout_width="400dp"-->
+<!--                android:layout_height="400dp"-->
+<!--                android:background="#2d2d2d"-->
+<!--                android:id="@+id/img_thumbnail"-->
+<!--                android:scaleType="centerCrop"/>-->
+        </com.github.chrisbanes.photoview.PhotoView>
+        </LinearLayout>
+
+</LinearLayout>
