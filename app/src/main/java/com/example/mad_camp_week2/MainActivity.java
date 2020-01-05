@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    public FragmentContacts fragmentContacts = new FragmentContacts();
     public FragmentGallery fragmentGallery = new FragmentGallery();
 
     private BackPressCloseHandler backPressCloseHandler;
@@ -40,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new FragmentContacts(), "Contacts");
+        adapter.addFragment(fragmentContacts, "Contacts");
         adapter.addFragment(fragmentGallery, "Images");
         adapter.addFragment(new FragmentContacts(), "gift box");
 

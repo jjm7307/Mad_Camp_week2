@@ -33,7 +33,9 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -52,10 +54,13 @@ public class SplashActivity extends AppCompatActivity {
   CallbackManager callbackManager;
   TextView facebook_id;
   ProgressDialog mDialog;
-  ImageView facebook_profile;
-  Button ok_button,name_button;
+  private ImageView facebook_profile;
+  private Button ok_button,name_button;
 
-  String Name="";
+  private String Name="NAME";
+  private Boolean load_profile=false;
+  private String friends_list = "001,002,003,004,005,006";
+
 
   //Connect to DB
   CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -112,7 +117,7 @@ public class SplashActivity extends AppCompatActivity {
 
         //Request Graph API
         Bundle parameters = new Bundle();
-        parameters.putString("fields","id,first_name,last_name");
+        parameters.putString("fields","id,name,birthday,gender,friends");
         request.setParameters(parameters);
         request.executeAsync();
 
@@ -130,29 +135,17 @@ public class SplashActivity extends AppCompatActivity {
       }
     });
 
-    //Init Service
+    //Connecting server Init Service
     Retrofit retrofitClient = RetrofitClient.getInstance();
     iMyService = retrofitClient.create(IMyService.class);
 
     if(AccessToken.getCurrentAccessToken() != null)
     {
-      name_button.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          loginUser(AccessToken.getCurrentAccessToken().getUserId());
-          facebook_id.setText(Name);
-        }
-      });
-
-      URL profile_picture = null;
-      try {
-        profile_picture = new URL("http://graph.facebook.com/"+ facebook_id+"/picture?width=250&height=250");
-        Picasso.get().load(profile_picture.toString()).into(facebook_profile);
-        //facebook_id.setText(AccessToken.getCurrentAccessToken().getUserId());
-      } catch (MalformedURLException e) {
-        e.printStackTrace();
+      if(!load_profile){
+        load_profile = true;
+        loginUser(AccessToken.getCurrentAccessToken().getUserId());
+        Picasso.get().load("http://graph.facebook.com/"+ AccessToken.getCurrentAccessToken().getUserId()+"/picture?width=250&height=250").into(facebook_profile);
       }
-
     }
 
     //Transition to Tab Activity
@@ -169,11 +162,16 @@ public class SplashActivity extends AppCompatActivity {
 
   private void getData(JSONObject object) {
     try{
-      registerUser(object.getString("id"),object.getString("first_name"));
+      registerUser(object.getString("id"),
+              object.getString("name"),
+              object.getString("birthday"),
+              object.getString("gender"),
+              friends_list,
+              "http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250");
       URL profile_picture = new URL("http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250");
       Picasso.get().load(profile_picture.toString()).into(facebook_profile);
 
-      facebook_id.setText(object.getString("first_name"));
+      facebook_id.setText(object.getString("name"));
     } catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (JSONException e) {
@@ -182,8 +180,8 @@ public class SplashActivity extends AppCompatActivity {
   }
 
   //Function for DB Server Connection
-  private void registerUser(String id, String name) {
-    compositeDisposable.add(iMyService.registerUser(id,name)
+  private void registerUser(String id, String name, String birthday, String gender, String friends_list, String profile_url) {
+    compositeDisposable.add(iMyService.registerUser(id,name,birthday,gender,friends_list,profile_url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Consumer<String>() {
@@ -202,10 +200,9 @@ public class SplashActivity extends AppCompatActivity {
               public void accept(String response) throws Exception {
                 Name = response;
                 Toast.makeText(SplashActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+                facebook_id.setText(Name);
               }
             }));
-
-
   }
 
   //Functions for ask permission
