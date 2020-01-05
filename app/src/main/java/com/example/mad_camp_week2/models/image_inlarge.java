@@ -22,12 +22,6 @@ import java.io.File;
 
 
 public class image_inlarge extends AppCompatActivity {
-    FloatingActionButton img_share;
-
-    private Animation fab_open, fab_close;
-    private Boolean isFabOpen = false;
-    private FloatingActionButton fab, fab1, fab2;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

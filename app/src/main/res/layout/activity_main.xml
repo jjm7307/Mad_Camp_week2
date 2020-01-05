@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#0e0f0a"
-        tools:context=".MainActivity">
+        tools:context=".SplashActivity">
 
 
         <com.google.android.material.tabs.TabLayout
@@ -42,13 +42,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1">
-                <ImageView
-                    android:layout_width="59dp"
-                    android:layout_height="59dp"
-                    android:scaleType="fitCenter"
-                    android:layout_marginTop="2dp"
-                    android:layout_gravity="center_horizontal"
-                    android:src="@drawable/icon_contact" />
+            <ImageView
+                android:layout_width="59dp"
+                android:layout_height="59dp"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="2dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/icon_contact" />
         </FrameLayout>
         <FrameLayout
             android:layout_width="wrap_content"
