@@ -3,17 +3,21 @@ package com.example.mad_camp_week2;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mad_camp_week2.Retrofit.IMyService;
@@ -33,9 +37,7 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -52,15 +54,16 @@ public class SplashActivity extends AppCompatActivity {
 
   //Facebook Login System
   CallbackManager callbackManager;
-  TextView facebook_id;
   ProgressDialog mDialog;
   private ImageView facebook_profile;
-  private Button ok_button,name_button;
-
+  private Button ok_button;
   private String Name="NAME";
   private Boolean load_profile=false;
+  private Animation fade_in_move_up;
+  private FrameLayout screen;
+  private LinearLayout app_logo, login_splash;
+  private ImageView app_name;
   private String friends_list = "0000000000000001,0000000000000002,0000000000000003,0000000000000004,0000000000000005,0000000000000006";
-
 
   //Connect to DB
   CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -88,13 +91,15 @@ public class SplashActivity extends AppCompatActivity {
     while(!hasPermissions(this,PERMISSIONS)){}
     Log.v("Test already", "Pass");
     callbackManager = CallbackManager.Factory.create();
-
-    facebook_id = (TextView)findViewById(R.id.facebook_id);
+    fade_in_move_up = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in_move_up);
     facebook_profile = (ImageView)findViewById(R.id.facebook_profile);
     ok_button = (Button)findViewById(R.id.ok_button);
-    name_button = (Button)findViewById(R.id.name_button);
+    screen = (FrameLayout)findViewById(R.id.screen);
+    login_splash = (LinearLayout)findViewById(R.id.login_list);
+    app_logo = (LinearLayout)findViewById(R.id.app_logo);
+    app_name = (ImageView)findViewById(R.id.app_name);
 
-    LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
+    final LoginButton loginButton = (LoginButton)findViewById(R.id.login_button);
     loginButton.setReadPermissions(Arrays.asList("public_profile","email"));
 
     loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -120,19 +125,13 @@ public class SplashActivity extends AppCompatActivity {
         parameters.putString("fields","id,name,birthday,gender,friends");
         request.setParameters(parameters);
         request.executeAsync();
-
-
       }
 
       @Override
-      public void onCancel() {
-
-      }
+      public void onCancel() {}
 
       @Override
-      public void onError(FacebookException error) {
-
-      }
+      public void onError(FacebookException error) {}
     });
 
     //Connecting server Init Service
@@ -144,6 +143,7 @@ public class SplashActivity extends AppCompatActivity {
       if(!load_profile){
         load_profile = true;
         loginUser(AccessToken.getCurrentAccessToken().getUserId());
+        //Toast.makeText(SplashActivity.this, "Login", Toast.LENGTH_SHORT).show();
         Picasso.get().load("http://graph.facebook.com/"+ AccessToken.getCurrentAccessToken().getUserId()+"/picture?width=250&height=250").into(facebook_profile);
       }
     }
@@ -158,6 +158,20 @@ public class SplashActivity extends AppCompatActivity {
         startActivity(intent);
       }
     });
+    screen.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        screen.setEnabled(false);
+        ObjectAnimator animation = ObjectAnimator.ofFloat(app_logo, "translationY", -190f);
+        ObjectAnimator animation2= ObjectAnimator.ofFloat(app_name,"alpha",1f,0.0f);
+        animation.setDuration(1000);
+        animation2.setDuration(500);
+        animation.start();
+        animation2.start();
+        login_splash.setVisibility(View.VISIBLE);
+        login_splash.startAnimation(fade_in_move_up);
+      }
+    });
   }
 
   private void getData(JSONObject object) {
@@ -169,9 +183,10 @@ public class SplashActivity extends AppCompatActivity {
               friends_list,
               "http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250");
       URL profile_picture = new URL("http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250");
+      Toast.makeText(SplashActivity.this, "새로운 계정 등록 중...", Toast.LENGTH_SHORT).show();
       Picasso.get().load(profile_picture.toString()).into(facebook_profile);
 
-      facebook_id.setText(object.getString("name"));
+      ok_button.setText('"'+object.getString("name")+'"'+"으로 로그인 하시겠습니까?");
     } catch (MalformedURLException e) {
       e.printStackTrace();
     } catch (JSONException e) {
@@ -187,7 +202,7 @@ public class SplashActivity extends AppCompatActivity {
             .subscribe(new Consumer<String>() {
               @Override
               public void accept(String response) throws Exception {
-                Toast.makeText(SplashActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SplashActivity.this, "등록 완료!", Toast.LENGTH_SHORT).show();
               }
             }));
   }
@@ -199,8 +214,8 @@ public class SplashActivity extends AppCompatActivity {
               @Override
               public void accept(String response) throws Exception {
                 Name = response;
-                Toast.makeText(SplashActivity.this, ""+response, Toast.LENGTH_SHORT).show();
-                facebook_id.setText(Name);
+                //Toast.makeText(SplashActivity.this, "로그인 성공!", Toast.LENGTH_SHORT).show();
+                ok_button.setText(Name+"으로 로그인 하시겠습니까?");
               }
             }));
   }

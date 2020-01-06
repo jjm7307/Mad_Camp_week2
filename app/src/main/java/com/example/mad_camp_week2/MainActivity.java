@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.addFragment(fragmentContacts, "Contacts");
         adapter.addFragment(fragmentGallery, "Images");
-        adapter.addFragment(fragmentFav, "gift box");
+        adapter.addFragment(fragmentFav, "Game");
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);

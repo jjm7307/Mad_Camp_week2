@@ -2,43 +2,81 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/screen"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
-        android:id="@+id/facebook_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+    android:layout_height="match_parent"
+    android:background="#9ddcce">
 
-    <TextView
-        android:id="@+id/facebook_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="140dp"
+    <LinearLayout
+        android:id="@+id/app_logo"
         android:layout_gravity="center"
-        android:text="Name"
-        />
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="180dp"
-        android:layout_gravity="center" />
+        android:layout_marginTop="80dp"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="fitCenter"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:src="@drawable/app_icon"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/app_name"/>
+            <LinearLayout
+                android:id="@+id/login_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="invisible">
+                <androidx.cardview.widget.CardView
+                    android:layout_gravity="center"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    card:cardCornerRadius="60dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
 
-    <Button
-        android:id="@+id/ok_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="OK"
-        android:layout_gravity="center"
-        android:layout_marginTop="240dp"/>
-    <Button
-        android:id="@+id/name_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Name"
-        android:layout_gravity="center"
-        android:layout_marginTop="280dp"/>
+                    <ImageView
+                        android:id="@+id/facebook_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="fitXY"
+                        android:layout_gravity="center" />
+                </androidx.cardview.widget.CardView>
+                <Button
+                    android:id="@+id/ok_button"
+                    android:paddingHorizontal="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text='페이스북으로 로그인해주세요'
+                    android:textColor="#ffffff"
+                    android:background="@drawable/radius_login_button"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"/>
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/login_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"/>
+                    />
+                </LinearLayout>
+        </FrameLayout>
+    </LinearLayout>
+
+
 
 
 </FrameLayout>

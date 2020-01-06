@@ -2,6 +2,7 @@ package com.example.mad_camp_week2.fragments;
 
 import androidx.fragment.app.Fragment;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.example.mad_camp_week2.Retrofit.IMyService;
 import com.example.mad_camp_week2.Retrofit.RetrofitClient;
 import com.example.mad_camp_week2.adapters.RecyclerViewAdapterContact;
 import com.example.mad_camp_week2.models.ModelContacts;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +37,8 @@ public class FragmentContacts extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerViewAdapterContact adapter;
     private List<ModelContacts> contact_list = new ArrayList<>();
-    private Button btn_download, btn_upload;
+    private FloatingActionButton btn_download;
+    private Boolean first = true;
 
     private String myfacebook_id = "1263435600511937";
 
@@ -55,25 +58,21 @@ public class FragmentContacts extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        v=inflater.inflate(R.layout.frag_contacts, container, false);
-        btn_download = (Button)v.findViewById(R.id.btn_download);
-        btn_upload = (Button)v.findViewById(R.id.btn_upload);
+        v = inflater.inflate(R.layout.frag_contacts, container, false);
+        btn_download = (FloatingActionButton) v.findViewById(R.id.btn_download);
         recyclerView = v.findViewById(R.id.rv_contacts);
 
         //Connecting server Init Service
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
-
+        if (first){
+            first = false;
+            //downloadContacts();
+        }
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 downloadContacts();
-            }
-        });
-        btn_upload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                uploadContacts();
             }
         });
 
@@ -86,15 +85,11 @@ public class FragmentContacts extends Fragment {
         return v;
     }
 
-    public void uploadContacts(){
-        List<ModelContacts> list = new ArrayList<>();
-        adapter.notifyDataSetChanged();
-    }
-
     public void downloadContacts() {
+        ObjectAnimator animation = ObjectAnimator.ofFloat(btn_download, "rotation",0f,360f);
+        animation.setDuration(2000);
+        animation.start();
         contact_list.clear();
-        //friends_list = readcontact("1263435600511937");
-        //contact_list.add(new ModelContacts(friends_list,"012-345-6789"));
         readcontact(myfacebook_id);
         adapter.notifyDataSetChanged();
     }
@@ -106,7 +101,7 @@ public class FragmentContacts extends Fragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
                         for (String friend : response.replace("\"", "").split(",")){
                             readcontactnum(friend);
                         }
@@ -120,7 +115,7 @@ public class FragmentContacts extends Fragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
                         JSONObject jsonObj = new JSONObject(response);
 
                         String name = (String) jsonObj.get("name");
@@ -137,7 +132,7 @@ public class FragmentContacts extends Fragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
                         contact_list.add(new ModelContacts(name,number,id_U,response.contains(id_U)));
                         adapter.notifyDataSetChanged();
                     }

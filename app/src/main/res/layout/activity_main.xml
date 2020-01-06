@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#0e0f0a"
+        android:background="#f0f0f0"
         tools:context=".SplashActivity">
 
 
@@ -68,11 +68,12 @@
             android:layout_weight="1">
             <ImageView
                 android:layout_width="60dp"
-                android:layout_height="38dp"
+                android:layout_height="40dp"
                 android:scaleType="fitCenter"
+                android:layout_marginLeft="2dp"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/icon_gift" />
+                android:src="@drawable/icon_game" />
         </FrameLayout>
     </LinearLayout>
 

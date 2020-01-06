@@ -1,6 +1,7 @@
 package com.example.mad_camp_week2.fragments;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,6 +30,7 @@ import com.example.mad_camp_week2.adapters.RecyclerViewAdapterGallery;
 import com.example.mad_camp_week2.models.ImageCard;
 import com.example.mad_camp_week2.models.ImageResult;
 import com.facebook.login.LoginResult;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
@@ -54,7 +56,7 @@ public class FragmentGallery extends Fragment {
     private List<ImageCard> lstImageCard = new ArrayList<>(); // 이미지카드를 저장할 배열
     private ArrayList<Uri> uris = new ArrayList<>(); // url들을 저장
     private ArrayList<Uri> tmpUris = new ArrayList<>(); // url들을 저장
-    private Button push,pull;
+    private FloatingActionButton push,pull;
     private ArrayList<String> urisString = new ArrayList<>(); // url을 String으로 변환
     private Retrofit retrofit; //
     private RetrofitInterface retrofitInterface; //
@@ -83,7 +85,7 @@ public class FragmentGallery extends Fragment {
         // View setting
         v = inflater.inflate(R.layout.gallery_fragment, container, false); // 갤러리 뿌릴 프래그먼트를 인플레이트
         myrecyclerview = (RecyclerView) v.findViewById(R.id.gallery_recyclerview);
-        push = (Button)v.findViewById(R.id.push_btn);
+        push = (FloatingActionButton) v.findViewById(R.id.push_btn);
         push.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,10 +93,13 @@ public class FragmentGallery extends Fragment {
             }
         });
 
-        pull = (Button)v.findViewById(R.id.pull_btn);
+        pull = (FloatingActionButton) v.findViewById(R.id.pull_btn);
         pull.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ObjectAnimator animation = ObjectAnimator.ofFloat(pull, "rotation",0f,360f);
+                animation.setDuration(2000);
+                animation.start();
                 setSync();  // 서버에 있는 이미지 all 가져옴 (싱크)
             }
         });

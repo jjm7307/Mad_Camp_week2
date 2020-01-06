@@ -9,8 +9,8 @@
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        card:cardBackgroundColor="#59af73"
         android:layout_marginHorizontal="5dp"
+        android:background="#ffffff"
         android:layout_marginVertical="3dp"
         card:cardCornerRadius="10dp">
         <FrameLayout
@@ -43,7 +43,7 @@
                         android:layout_height="match_parent"
                         android:scaleType="fitCenter"
                         android:background="?attr/selectableItemBackground"
-                        android:src="@drawable/icon_profile_red" />
+                        android:src="@drawable/icon_fb_profile" />
                 </androidx.cardview.widget.CardView>
 
                 <LinearLayout
@@ -59,7 +59,7 @@
                         android:layout_height="wrap_content"
                         android:text="name"
                         android:textStyle="bold"
-                        android:textColor="@color/white"
+                        android:textColor="#555555"
                         android:textSize="20sp"/>
 
                     <TextView
@@ -67,29 +67,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="number"
-                        android:textColor="@color/white"
+                        android:textColor="#555555"
                         android:textSize="16sp"/>
                 </LinearLayout>
 
                 <FrameLayout
                     android:id="@+id/like_U"
                     android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center">
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:scaleType="fitCenter"
-                        android:src="@drawable/icon_bell_empty"/>
+                        android:src="@drawable/contact_heart_empty"/>
                     <ImageView
                         android:id="@+id/heart"
-                        android:layout_width="25dp"
-                        android:layout_height="26dp"
+                        android:layout_width="30dp"
+                        android:layout_height="22.9dp"
                         android:layout_gravity="center"
                         android:scaleType="fitCenter"
                         android:visibility="invisible"
-                        android:src="@drawable/icon_bell"/>
+                        android:src="@drawable/contact_heart"/>
                 </FrameLayout>
 
                 <androidx.cardview.widget.CardView
@@ -97,7 +97,7 @@
                     android:layout_gravity="center"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    card:cardBackgroundColor="#F8D85A"
+                    card:cardBackgroundColor="#b7e6d6"
                     card:cardCornerRadius="25dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true">

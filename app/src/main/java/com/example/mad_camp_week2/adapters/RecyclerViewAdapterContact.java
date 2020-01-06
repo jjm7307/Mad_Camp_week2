@@ -77,7 +77,7 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         contact_profile = holder.contact_profile;
         heart = holder.heart;
 
-        contact_profile.setImageResource(R.drawable.icon_profile_red);
+        contact_profile.setImageResource(R.drawable.icon_fb_profile);
         contact_name.setText(mListContacts.get(position).getName());
         contact_number.setText(mListContacts.get(position).getNumber());
         if(mListContacts.get(position).getLikeU()){
