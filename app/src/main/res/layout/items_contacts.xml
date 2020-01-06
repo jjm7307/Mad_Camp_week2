@@ -71,7 +71,29 @@
                         android:textSize="16sp"/>
                 </LinearLayout>
 
+                <FrameLayout
+                    android:id="@+id/like_U"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center">
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/icon_bell_empty"/>
+                    <ImageView
+                        android:id="@+id/heart"
+                        android:layout_width="25dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:visibility="invisible"
+                        android:src="@drawable/icon_bell"/>
+                </FrameLayout>
+
                 <androidx.cardview.widget.CardView
+                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center"
                     android:layout_width="50dp"
                     android:layout_height="50dp"

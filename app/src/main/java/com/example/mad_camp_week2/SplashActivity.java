@@ -59,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
 
   private String Name="NAME";
   private Boolean load_profile=false;
-  private String friends_list = "001,002,003,004,005,006";
+  private String friends_list = "0000000000000001,0000000000000002,0000000000000003,0000000000000004,0000000000000005,0000000000000006";
 
 
   //Connect to DB

@@ -1,3 +1,4 @@
+
 package com.example.mad_camp_week2.fragments;
 
 import androidx.fragment.app.Fragment;
@@ -17,7 +18,9 @@ import com.example.mad_camp_week2.R;
 import com.example.mad_camp_week2.Retrofit.IMyService;
 import com.example.mad_camp_week2.Retrofit.RetrofitClient;
 import com.example.mad_camp_week2.adapters.RecyclerViewAdapterContact;
+import com.example.mad_camp_week2.adapters.RecyclerViewAdapterFav;
 import com.example.mad_camp_week2.models.ModelContacts;
+import com.example.mad_camp_week2.models.ModelFavs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +32,14 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import org.json.JSONObject;
 
-public class FragmentContacts extends Fragment {
+
+public class FragmentFav extends Fragment {
 
     View v;
     private RecyclerView recyclerView;
-    private RecyclerViewAdapterContact adapter;
-    private List<ModelContacts> contact_list = new ArrayList<>();
+    private RecyclerViewAdapterFav adapter;
+    private List<ModelFavs> fav_list = new ArrayList<>();
+    private String friends_list="", friend_id="";
     private Button btn_download, btn_upload;
 
     private String myfacebook_id = "1263435600511937";
@@ -48,17 +53,17 @@ public class FragmentContacts extends Fragment {
         compositeDisposable.clear();
         super.onStop();
     }
-    public FragmentContacts(){
+    public FragmentFav(){
     }
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        v=inflater.inflate(R.layout.frag_contacts, container, false);
+        v=inflater.inflate(R.layout.frag_favs, container, false);
         btn_download = (Button)v.findViewById(R.id.btn_download);
         btn_upload = (Button)v.findViewById(R.id.btn_upload);
-        recyclerView = v.findViewById(R.id.rv_contacts);
+        recyclerView = v.findViewById(R.id.rv_favs);
 
         //Connecting server Init Service
         Retrofit retrofitClient = RetrofitClient.getInstance();
@@ -67,13 +72,13 @@ public class FragmentContacts extends Fragment {
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadContacts();
+                downloadFavs();
             }
         });
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadContacts();
+
             }
         });
 
@@ -81,25 +86,18 @@ public class FragmentContacts extends Fragment {
         RecyclerView.LayoutManager layoutManager = linearLayoutManager;
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new RecyclerViewAdapterContact(getContext(),contact_list);
+        adapter = new RecyclerViewAdapterFav(getContext(),fav_list);
         recyclerView.setAdapter(adapter);
         return v;
     }
 
-    public void uploadContacts(){
-        List<ModelContacts> list = new ArrayList<>();
+    public void downloadFavs() {
+        fav_list.clear();
+        wholoveme(myfacebook_id);
         adapter.notifyDataSetChanged();
     }
 
-    public void downloadContacts() {
-        contact_list.clear();
-        //friends_list = readcontact("1263435600511937");
-        //contact_list.add(new ModelContacts(friends_list,"012-345-6789"));
-        readcontact(myfacebook_id);
-        adapter.notifyDataSetChanged();
-    }
-
-    private void readcontact(String id) {
+    private void wholoveme(final String id) {
         compositeDisposable.add(iMyService.readcontact(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -107,13 +105,29 @@ public class FragmentContacts extends Fragment {
                     @Override
                     public void accept(String response) throws Exception {
                         Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        String friends_list = response.replace("\"", "");
+                        String[] friends = friends_list.split(",");
                         for (String friend : response.replace("\"", "").split(",")){
-                            readcontactnum(friend);
+                            loveme(id, friend);
                         }
                     }
                 }));
     }
-    private void readcontactnum(final String id) {
+    private void loveme(final String id, final String friend) {
+        compositeDisposable.add(iMyService.getlikeU(friend)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        if(response.contains(id)){
+                            savethem(friend);
+                        }
+                    }
+                }));
+    }
+    private void savethem(final String id) {
         compositeDisposable.add(iMyService.readcontactnum(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,26 +136,12 @@ public class FragmentContacts extends Fragment {
                     public void accept(String response) throws Exception {
                         Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
                         JSONObject jsonObj = new JSONObject(response);
-
-                        String name = (String) jsonObj.get("name");
-                        String number = (String) jsonObj.get("number");
-                        IlikeU(myfacebook_id, id, name, number);
+                        fav_list.add(new ModelFavs(
+                                (String) jsonObj.get("name"),
+                                (String) jsonObj.get("gender"),
+                                (String) jsonObj.get("birthday")));
                         adapter.notifyDataSetChanged();
                     }
                 }));
     }
-    private void IlikeU(String id, final String id_U, final String name, final String number) {
-        compositeDisposable.add(iMyService.getlikeU(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String response) throws Exception {
-                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
-                        contact_list.add(new ModelContacts(name,number,id_U,response.contains(id_U)));
-                        adapter.notifyDataSetChanged();
-                    }
-                }));
-    }
-
 }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 import com.example.mad_camp_week2.adapters.ViewPagerAdapter;
 import com.example.mad_camp_week2.fragments.FragmentContacts;
+import com.example.mad_camp_week2.fragments.FragmentFav;
 import com.example.mad_camp_week2.fragments.FragmentGallery;
 import com.google.android.material.tabs.TabLayout;
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     public FragmentContacts fragmentContacts = new FragmentContacts();
     public FragmentGallery fragmentGallery = new FragmentGallery();
+    public FragmentFav fragmentFav = new FragmentFav();
 
     private BackPressCloseHandler backPressCloseHandler;
 
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
+
+
         tabLayout = findViewById(R.id.tablayout);
         viewPager = findViewById(R.id.viewpager);
 
@@ -41,13 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
         adapter.addFragment(fragmentContacts, "Contacts");
         adapter.addFragment(fragmentGallery, "Images");
-        adapter.addFragment(new FragmentContacts(), "gift box");
+        adapter.addFragment(fragmentFav, "gift box");
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
 
         tabLayout.setupWithViewPager(viewPager);
-
     }
 
     public class BackPressCloseHandler{

@@ -28,4 +28,13 @@ public interface IMyService {
     @POST("readcontactnum")
     @FormUrlEncoded
     Observable<String> readcontactnum(@Field("id") String id);
+
+    @POST("getlikeU")
+    @FormUrlEncoded
+    Observable<String> getlikeU(@Field("id") String id);
+
+    @POST("setlikeU")
+    @FormUrlEncoded
+    Observable<String> setlikeU(@Field("id") String id,
+                                @Field("likeU") String likeU);
 }
