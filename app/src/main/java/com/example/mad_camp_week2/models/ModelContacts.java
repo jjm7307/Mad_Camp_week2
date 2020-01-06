@@ -3,12 +3,11 @@ package com.example.mad_camp_week2.models;
 public class ModelContacts {
 
 
-    private String name,number,photo;
+    private String name,number;
 
-    public ModelContacts(String name, String number, String photo) {
+    public ModelContacts(String name, String number) {
         this.name = name;
         this.number = number;
-        this.photo = photo;
     }
 
     public String getName() {
@@ -25,13 +24,5 @@ public class ModelContacts {
 
     public void setNumber(String number) {
         this.number = number;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
     }
 }
