@@ -83,6 +83,9 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         if(mListContacts.get(position).getLikeU()){
             heart.setVisibility(View.VISIBLE);
         }
+        else{
+            heart.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

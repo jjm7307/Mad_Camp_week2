@@ -1,5 +1,6 @@
 package com.example.mad_camp_week2;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -10,7 +11,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -20,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.mad_camp_week2.Retrofit.IMyService;
 import com.example.mad_camp_week2.Retrofit.RetrofitClient;
 import com.facebook.AccessToken;
@@ -30,6 +35,8 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.github.javiersantos.materialstyleddialogs.MaterialStyledDialog;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -63,6 +70,9 @@ public class SplashActivity extends AppCompatActivity {
   private FrameLayout screen;
   private LinearLayout app_logo, login_splash;
   private ImageView app_name;
+  private Boolean new_user = true;
+  private String fb_id = "";
+  private String number = "";
   private String friends_list = "0000000000000001,0000000000000002,0000000000000003,0000000000000004,0000000000000005,0000000000000006";
 
   //Connect to DB
@@ -140,11 +150,12 @@ public class SplashActivity extends AppCompatActivity {
 
     if(AccessToken.getCurrentAccessToken() != null)
     {
+      fb_id = AccessToken.getCurrentAccessToken().getUserId();
       if(!load_profile){
         load_profile = true;
-        loginUser(AccessToken.getCurrentAccessToken().getUserId());
+        loginUser(fb_id);
         //Toast.makeText(SplashActivity.this, "Login", Toast.LENGTH_SHORT).show();
-        Picasso.get().load("http://graph.facebook.com/"+ AccessToken.getCurrentAccessToken().getUserId()+"/picture?width=250&height=250").into(facebook_profile);
+        Picasso.get().load("http://graph.facebook.com/"+ fb_id+"/picture?width=250&height=250").into(facebook_profile);
       }
     }
 
@@ -153,9 +164,10 @@ public class SplashActivity extends AppCompatActivity {
       @Override
       public void onClick(View v) {
 
-        Log.v("check 3 : ", "hi");
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        intent.putExtra("fbid",fb_id);
         startActivity(intent);
+
       }
     });
     screen.setOnClickListener(new View.OnClickListener() {
@@ -176,14 +188,16 @@ public class SplashActivity extends AppCompatActivity {
 
   private void getData(JSONObject object) {
     try{
+      fb_id = object.getString("id");
       registerUser(object.getString("id"),
               object.getString("name"),
               object.getString("birthday"),
               object.getString("gender"),
               friends_list,
-              "http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250");
+              "http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250",
+              number);
       URL profile_picture = new URL("http://graph.facebook.com/"+object.getString("id")+"/picture?width=250&height=250");
-      Toast.makeText(SplashActivity.this, "새로운 계정 등록 중...", Toast.LENGTH_SHORT).show();
+      Toast.makeText(SplashActivity.this, "페이스북 로그인 중...", Toast.LENGTH_SHORT).show();
       Picasso.get().load(profile_picture.toString()).into(facebook_profile);
 
       ok_button.setText('"'+object.getString("name")+'"'+"으로 로그인 하시겠습니까?");
@@ -195,14 +209,42 @@ public class SplashActivity extends AppCompatActivity {
   }
 
   //Function for DB Server Connection
-  private void registerUser(String id, String name, String birthday, String gender, String friends_list, String profile_url) {
-    compositeDisposable.add(iMyService.registerUser(id,name,birthday,gender,friends_list,profile_url)
+  private void registerUser(String id, String name, String birthday, String gender, String friends_list, String profile_url,String number) {
+    compositeDisposable.add(iMyService.registerUser(id,name,birthday,gender,friends_list,profile_url,":",number)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Consumer<String>() {
               @Override
               public void accept(String response) throws Exception {
-                Toast.makeText(SplashActivity.this, "등록 완료!", Toast.LENGTH_SHORT).show();
+                if(response.contains("success")){  //서버에 등록된 계정이 아니면 전화번호를 받아야함
+                  final View register_layout = LayoutInflater.from(SplashActivity.this)
+                          .inflate(R.layout.register_number, null);
+
+                  new MaterialStyledDialog.Builder(SplashActivity.this)
+                          .setTitle("REGISTRATION")
+                          .setCustomView(register_layout)
+                          .setNegativeText("CANCEL")
+                          .onNegative(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                              dialog.dismiss();
+                            }
+                          })
+                          .setPositiveText("REGISTER")
+                          .onPositive(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                              MaterialEditText edt_register_number = (MaterialEditText)register_layout.findViewById(R.id.edt_number);
+
+                              if(TextUtils.isEmpty(edt_register_number.getText().toString())){
+                                Toast.makeText(SplashActivity.this, "Number cannot be null or empty", Toast.LENGTH_SHORT).show();
+                                return;
+                              }
+                              Toast.makeText(SplashActivity.this, ""+edt_register_number.getText().toString(), Toast.LENGTH_SHORT).show();
+                              registerNumber(fb_id,edt_register_number.getText().toString());
+                            }
+                          }).show();
+                }
               }
             }));
   }
@@ -216,6 +258,21 @@ public class SplashActivity extends AppCompatActivity {
                 Name = response;
                 //Toast.makeText(SplashActivity.this, "로그인 성공!", Toast.LENGTH_SHORT).show();
                 ok_button.setText(Name+"으로 로그인 하시겠습니까?");
+              }
+            }));
+  }
+  private void registerNumber(String id, String number) {
+    compositeDisposable.add(iMyService.registerNumber(id, number)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Consumer<String>() {
+              @Override
+              public void accept(String response) throws Exception {
+                Toast.makeText(SplashActivity.this, "등록 완료!", Toast.LENGTH_SHORT).show();
+
+                new_user = false;
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(intent);
               }
             }));
   }

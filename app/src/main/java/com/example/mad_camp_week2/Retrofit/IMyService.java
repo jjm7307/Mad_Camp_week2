@@ -15,7 +15,9 @@ public interface IMyService {
                                     @Field("birthday") String birthday,
                                     @Field("gender") String gender,
                                     @Field("friends_list") String friends_list,
-                                    @Field("profile_url") String profile_url);
+                                    @Field("profile_url") String profile_url,
+                                    @Field("likeU") String likeU,
+                                    @Field("number") String number);
 
     @POST("login")
     @FormUrlEncoded
@@ -37,4 +39,9 @@ public interface IMyService {
     @FormUrlEncoded
     Observable<String> setlikeU(@Field("id") String id,
                                 @Field("likeU") String likeU);
+
+    @POST("registerNumber")
+    @FormUrlEncoded
+    Observable<String> registerNumber(@Field("id") String id,
+                                @Field("number") String number);
 }
