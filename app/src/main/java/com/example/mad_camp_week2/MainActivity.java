@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(fragmentFav, "Game"); // 초기 알게임화면
 
         viewPager.setAdapter(adapter);
-        viewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(viewPager);
 
     }

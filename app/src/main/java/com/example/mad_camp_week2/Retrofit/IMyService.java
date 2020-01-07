@@ -40,6 +40,10 @@ public interface IMyService {
     Observable<String> setlikeU(@Field("id") String id,
                                 @Field("likeU") String likeU);
 
+    @POST("getAge")
+    @FormUrlEncoded
+    Observable<String> getAge(@Field("id") String id);
+
     @POST("registerNumber")
     @FormUrlEncoded
     Observable<String> registerNumber(@Field("id") String id,

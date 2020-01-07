@@ -22,6 +22,7 @@ import com.example.mad_camp_week2.Retrofit.IMyService;
 import com.example.mad_camp_week2.Retrofit.RetrofitClient;
 import com.example.mad_camp_week2.adapters.RecyclerViewAdapterFav;
 import com.example.mad_camp_week2.models.ModelFavs;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONObject;
 
@@ -39,10 +40,8 @@ public class FragmentFav2 extends Fragment {
     private RecyclerView myrecyclerview;
     private RecyclerViewAdapterFav adapter;
     private View v;
-    private Button backBtn;
     private List<ModelFavs> fav_list = new ArrayList<>();
-    private String friends_list="", friend_id="";
-    private Button btn_download, btn_upload;
+    private FloatingActionButton backBtn;
 
     private String myfacebook_id = "1263435600511937";
 
@@ -57,38 +56,17 @@ public class FragmentFav2 extends Fragment {
     }
     public FragmentFav2(){}
 
-/*
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        lstImageCard.add(new ModelFavs ("조재민",22,"10/13/1998"));
-        lstImageCard.add(new ModelFavs ("조혜빈",20,"02/13/1998"));
-        lstImageCard.add(new ModelFavs ("신재문",23,"07/13/1998"));
-        lstImageCard.add(new ModelFavs ("김옥경",21,"12/13/1998"));
-        lstImageCard.add(new ModelFavs ("김라면",19,"01/13/1998"));
-        Log.d("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",""+Integer.parseInt("01")); // "01" Parsing format check
-    }
-*/
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.frag_favs2, container, false);
         myrecyclerview = (RecyclerView) v.findViewById(R.id.card_recyclerview);
-        btn_download = (Button)v.findViewById(R.id.btn_download);
-        backBtn = v.findViewById(R.id.btn_fragmentB_back); // 뒤로가기 버튼 누르면 다시 프래그먼트A로
+        backBtn = (FloatingActionButton)v.findViewById(R.id.btn_fragmentB_back); // 뒤로가기 버튼 누르면 다시 프래그먼트A로
 
         //Connecting server Init Service
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
 
-        btn_download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadFavs();
-            }
-        });
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,14 +86,16 @@ public class FragmentFav2 extends Fragment {
 
         adapter = new RecyclerViewAdapterFav(getContext(),fav_list);
         myrecyclerview.setAdapter(adapter);
+        if(fav_list.size() == 0){
+            downloadFavs();
+        }
         return v;
     }
-    public void downloadFavs() {
+    private void downloadFavs() {
         fav_list.clear();
         wholoveme(myfacebook_id);
         adapter.notifyDataSetChanged();
     }
-
     private void wholoveme(final String id) {
         compositeDisposable.add(iMyService.readcontact(id)
                 .subscribeOn(Schedulers.io())
@@ -123,7 +103,7 @@ public class FragmentFav2 extends Fragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
                         String friends_list = response.replace("\"", "");
                         String[] friends = friends_list.split(",");
                         for (String friend : response.replace("\"", "").split(",")){
@@ -139,26 +119,39 @@ public class FragmentFav2 extends Fragment {
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
                         if(response.contains(id)){
-                            savethem(friend);
+                            getAge(friend);
                         }
                     }
                 }));
     }
-    private void savethem(final String id) {
+    private void getAge(final String id){
+        compositeDisposable.add(iMyService.getAge(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String response) throws Exception {
+                        String Arr_birth[] = response.replace("\"", "").split("/");
+                        savethem(id, Integer.parseInt(Arr_birth[2].trim()));
+                    }
+                }));
+    }
+    private void savethem(final String id, final Integer age) {
         compositeDisposable.add(iMyService.readcontactnum(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
                         JSONObject jsonObj = new JSONObject(response);
                         fav_list.add(new ModelFavs(
                                 (String) jsonObj.get("name"),
                                 (String) jsonObj.get("gender"),
-                                (String) jsonObj.get("birthday")));
+                                (String) jsonObj.get("birthday"),
+                                age));
                         adapter.notifyDataSetChanged();
                     }
                 }));

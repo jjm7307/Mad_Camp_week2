@@ -4,11 +4,13 @@ import android.net.Uri;
 
 public class ModelFavs {
     private String name,gender,birthday;
+    private Integer my_age;
 
-    public ModelFavs(String name, String gender, String birthday) {
+    public ModelFavs(String name, String gender, String birthday, Integer my_age) {
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
+        this.my_age = my_age;
     }
 
     public String getName() {
@@ -38,9 +40,10 @@ public class ModelFavs {
     public String getAge(){
         String birth = this.birthday;
         String Arr_birth[] = birth.split("/");
-        int birth_year = Integer.parseInt(Arr_birth[2].trim());
-        int age = 2020-birth_year+1;
-        return Integer.toString(age);
+        Integer birth_year = Integer.parseInt(Arr_birth[2].trim());
+        if (this.my_age > birth_year) return "나보다 연상";
+        else if(this.my_age == birth_year) return "나랑 동갑";
+        else return "나보다 연하";
     }
 
     // 현재 객체의 이름을 가운데 마스킹해서 반환, 모두 세 글자라고 가정
@@ -48,7 +51,7 @@ public class ModelFavs {
         String rawName = this.name;
         String first = rawName.substring(0,1);
         String last = rawName.substring(2,3);
-        return first+"*"+last ; // "조*빈" 포맷
+        return first+"OO" ; // "조OO" 포맷
     }
 
     //현재 객체의 생일을 계절로 반환

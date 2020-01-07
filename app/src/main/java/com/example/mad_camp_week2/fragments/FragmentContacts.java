@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment;
 
 import android.animation.ObjectAnimator;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,6 @@ public class FragmentContacts extends Fragment {
     private RecyclerViewAdapterContact adapter;
     private List<ModelContacts> contact_list = new ArrayList<>();
     private FloatingActionButton btn_download;
-    private Boolean first = true;
 
     private String myfacebook_id = "1263435600511937";
 
@@ -65,10 +65,6 @@ public class FragmentContacts extends Fragment {
         //Connecting server Init Service
         Retrofit retrofitClient = RetrofitClient.getInstance();
         iMyService = retrofitClient.create(IMyService.class);
-        if (first){
-            first = false;
-            //downloadContacts();
-        }
         btn_download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +78,9 @@ public class FragmentContacts extends Fragment {
 
         adapter = new RecyclerViewAdapterContact(getContext(),contact_list);
         recyclerView.setAdapter(adapter);
+        if(contact_list.size() == 0){
+            downloadContacts();
+        }
         return v;
     }
 
@@ -91,6 +90,7 @@ public class FragmentContacts extends Fragment {
         animation.start();
         contact_list.clear();
         readcontact(myfacebook_id);
+        Log.d("test", "read contact");
         adapter.notifyDataSetChanged();
     }
 
@@ -120,12 +120,13 @@ public class FragmentContacts extends Fragment {
 
                         String name = (String) jsonObj.get("name");
                         String number = (String) jsonObj.get("number");
-                        IlikeU(myfacebook_id, id, name, number);
+                        String profile_url = (String) jsonObj.get("profile_url");
+                        IlikeU(myfacebook_id, id, name, number,profile_url);
                         adapter.notifyDataSetChanged();
                     }
                 }));
     }
-    private void IlikeU(String id, final String id_U, final String name, final String number) {
+    private void IlikeU(String id, final String id_U, final String name, final String number, final String profile_url) {
         compositeDisposable.add(iMyService.getlikeU(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -133,7 +134,7 @@ public class FragmentContacts extends Fragment {
                     @Override
                     public void accept(String response) throws Exception {
                         //Toast.makeText(getContext(), ""+response, Toast.LENGTH_SHORT).show();
-                        contact_list.add(new ModelContacts(name,number,id_U,response.contains(id_U)));
+                        contact_list.add(new ModelContacts(name,number,id_U,response.contains(id_U),profile_url));
                         adapter.notifyDataSetChanged();
                     }
                 }));

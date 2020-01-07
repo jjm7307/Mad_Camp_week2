@@ -18,6 +18,7 @@ import com.example.mad_camp_week2.R;
 import com.example.mad_camp_week2.Retrofit.IMyService;
 import com.example.mad_camp_week2.Retrofit.RetrofitClient;
 import com.example.mad_camp_week2.models.ModelContacts;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -39,12 +40,6 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
     //Connect to DB
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     IMyService iMyService;
-
-    /*@Override
-    public void onStop() {
-        compositeDisposable.clear();
-        super.onStop();
-    }*/
 
     public RecyclerViewAdapterContact(Context context, List<ModelContacts> listContacts) {
         mListContacts = listContacts;
@@ -76,8 +71,12 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
         contact_number = holder.contact_number;
         contact_profile = holder.contact_profile;
         heart = holder.heart;
-
-        contact_profile.setImageResource(R.drawable.icon_fb_profile);
+        if(mListContacts.get(position).getProfile_url().contains("http")){
+            Picasso.get().load(mListContacts.get(position).getProfile_url()).into(contact_profile);
+        }
+        else {
+            contact_profile.setImageResource(R.drawable.icon_fb_profile);
+        }
         contact_name.setText(mListContacts.get(position).getName());
         contact_number.setText(mListContacts.get(position).getNumber());
         if(mListContacts.get(position).getLikeU()){

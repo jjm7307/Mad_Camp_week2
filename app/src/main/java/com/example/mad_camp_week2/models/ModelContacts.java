@@ -7,7 +7,7 @@ public class ModelContacts {
     private String profile_url, facebook_id;
     private Boolean likeU;
 
-    public ModelContacts(String name, String number, String facebook_id, Boolean likeU) {
+    public ModelContacts(String name, String number, String facebook_id, Boolean likeU,String profile_url) {
         this.name = name;
         this.number = number;
         this.profile_url = profile_url;

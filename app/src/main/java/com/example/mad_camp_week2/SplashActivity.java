@@ -74,7 +74,7 @@ public class SplashActivity extends AppCompatActivity {
   private ImageView app_name;
   private String fb_id = "";
   private String number = "";
-  private String friends_list = "0000000000000001,0000000000000002,0000000000000003,0000000000000004,0000000000000005,0000000000000006";
+  private String friends_list = "0000000000000001,0000000000000002,0000000000000003,0000000000000004,0000000000000005,0000000000000006,0000000000000007,0000000000000008";
 
   //Connect to DB
   CompositeDisposable compositeDisposable = new CompositeDisposable();
