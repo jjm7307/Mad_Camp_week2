@@ -10,12 +10,24 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/pull_btn"
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/icon_fb_profile"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/pull_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="90dp"
+        android:layout_marginRight="16dp"
         android:src="@drawable/icon_syncronize"
+        android:visibility="invisible"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -23,8 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="160dp"
         android:layout_marginRight="16dp"
         android:src="@drawable/icon_upload"
+        android:visibility="invisible"
         />
 </FrameLayout>

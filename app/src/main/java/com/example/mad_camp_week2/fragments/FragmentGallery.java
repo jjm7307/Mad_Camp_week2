@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.Toast;
@@ -56,12 +58,14 @@ public class FragmentGallery extends Fragment {
     private List<ImageCard> lstImageCard = new ArrayList<>(); // 이미지카드를 저장할 배열
     private ArrayList<Uri> uris = new ArrayList<>(); // url들을 저장
     private ArrayList<Uri> tmpUris = new ArrayList<>(); // url들을 저장
-    private FloatingActionButton push,pull;
+    private FloatingActionButton push,pull,fab;
     private ArrayList<String> urisString = new ArrayList<>(); // url을 String으로 변환
     private Retrofit retrofit; //
     private RetrofitInterface retrofitInterface; //
     private String BASE_URL="http://192.249.19.251:0180"; //
     private Gson gson = new Gson();
+    private Animation fab_open, fab_close;
+    private Boolean isFabOpen = false;
 
     public FragmentGallery() {
     }
@@ -103,7 +107,15 @@ public class FragmentGallery extends Fragment {
                 setSync();  // 서버에 있는 이미지 all 가져옴 (싱크)
             }
         });
-
+        fab_open = AnimationUtils.loadAnimation(getContext(), R.anim.fab_open);
+        fab_close = AnimationUtils.loadAnimation(getContext(), R.anim.fab_close);
+        fab = (FloatingActionButton) v.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                anim();
+            }
+        });
         myrecyclerview.setLayoutManager((new GridLayoutManager(getContext(), 3)));
         recyclerAdapter = new RecyclerViewAdapterGallery(getContext(), lstImageCard);
         myrecyclerview.setAdapter(recyclerAdapter);
@@ -224,4 +236,23 @@ public class FragmentGallery extends Fragment {
         if(count == tmpUris.size())
             Toast.makeText(getContext(),"Uploaded successfully",Toast.LENGTH_LONG).show();
     }
+
+    public void anim() {
+
+        if (isFabOpen) {
+            push.startAnimation(fab_close);
+            pull.startAnimation(fab_close);
+            push.setClickable(false);
+            pull.setClickable(false);
+            isFabOpen = false;
+        } else {
+            push.startAnimation(fab_open);
+            pull.startAnimation(fab_open);
+            push.setClickable(true);
+            pull.setClickable(true);
+            isFabOpen = true;
+        }
+    }
+
+
 }
