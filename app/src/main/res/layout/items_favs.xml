@@ -45,13 +45,29 @@
                 android:layout_weight="4"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/card_description_id"
+                    android:id="@+id/card_name"
                     android:textColor="#2d2d2d"
                     android:textSize="25sp"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Hint Result Description"/>
+                    android:text="Name"/>
+                <TextView
+                    android:id="@+id/card_age"
+                    android:textColor="#2d2d2d"
+                    android:textSize="25sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Age"/>
+                <TextView
+                    android:id="@+id/card_birth"
+                    android:textColor="#2d2d2d"
+                    android:textSize="25sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Birth"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

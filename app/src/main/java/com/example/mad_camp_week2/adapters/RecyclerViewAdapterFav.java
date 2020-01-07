@@ -54,11 +54,12 @@ public class RecyclerViewAdapterFav extends RecyclerView.Adapter<RecyclerViewAda
 
     @Override
     public void onBindViewHolder(@NonNull final ImgViewHolder holder, final int position) {
-        holder.img_description.setText(mData.get(position).getRandomDescription()); // 해당 Person객체가 가지고 있는 정보를 가지고 해당 필드중 랜덤하게 하나 출력해주기 위한 문자열을 반환
+        holder.card_name.setText(mData.get(position).getMaskName());
+        holder.card_age.setText(mData.get(position).getAge());
+        holder.card_birth.setText(mData.get(position).getSeason()+"에 태어남");// 해당 Person객체가 가지고 있는 정보를 가지고 해당 필드중 랜덤하게 하나 출력해주기 위한 문자열을 반환
         // 원래는 인터넷 상의 url로 모자이크 처리해서 셋팅해줘야 함
         //Uri tmpUri = mData.get(position).getUri(); // url으로 변경해야 함
-        holder.img_thumbnail.setImageURI(mData.get(position).getUri()); // 이미지뷰를 세팅하기 위한 uri를 받아옴
-        // -------> 원래는 피카소 써서 인터넷상의 url을 가지고 이미지에 처리를 해서 보여줘야함
+        //holder.card_profile.setImageURI(mData.get(position).getUri()); // 이미지뷰를 세팅하기 위한 uri를 받아옴--> 원래는 피카소 써서 인터넷상의 url을 가지고 이미지에 처리를 해서 보여줘야함
         lstCardView.add(holder.cardView);
         lstCardViewFront.add(holder.cardViewFront);
         lstCardViewBack.add(holder.cardViewBack);
@@ -76,7 +77,6 @@ public class RecyclerViewAdapterFav extends RecyclerView.Adapter<RecyclerViewAda
 //
 //                //start at activity
 //                mContext.startActivity(intent);
-
             }
         });
         holder.cardView.getFocusable();
@@ -106,15 +106,17 @@ public class RecyclerViewAdapterFav extends RecyclerView.Adapter<RecyclerViewAda
     }
 
     public static class ImgViewHolder extends RecyclerView.ViewHolder {
-        private TextView img_description;
-        private ImageView img_thumbnail;
+        private TextView card_name, card_age, card_birth;
+        private ImageView card_profile;
         public static CardView cardView,cardViewFront,cardViewBack;
 
         public ImgViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            img_description = (TextView) itemView.findViewById(R.id.card_description_id);
-            img_thumbnail = (ImageView) itemView.findViewById((R.id.card_img_id));
+            card_name = (TextView) itemView.findViewById(R.id.card_name);
+            card_age = (TextView) itemView.findViewById(R.id.card_age);
+            card_birth = (TextView) itemView.findViewById(R.id.card_birth);
+            card_profile = (ImageView) itemView.findViewById((R.id.card_img_id));
             cardView = (CardView) itemView.findViewById(R.id.cardview_id); // 클릭이벤트를 받을 가장 바깥의 cardview
             cardViewFront = (CardView) itemView.findViewById(R.id.cardview_front); // 정보를 가지고 내용을 리셋시켜야 하므로 어댑터가 필요
             cardViewBack = (CardView) itemView.findViewById(R.id.cardview_back); // 어댑터 필요없음

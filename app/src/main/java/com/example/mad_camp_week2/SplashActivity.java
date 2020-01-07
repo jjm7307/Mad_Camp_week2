@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -70,7 +72,6 @@ public class SplashActivity extends AppCompatActivity {
   private FrameLayout screen;
   private LinearLayout app_logo, login_splash;
   private ImageView app_name;
-  private Boolean new_user = true;
   private String fb_id = "";
   private String number = "";
   private String friends_list = "0000000000000001,0000000000000002,0000000000000003,0000000000000004,0000000000000005,0000000000000006";
@@ -118,8 +119,6 @@ public class SplashActivity extends AppCompatActivity {
         mDialog = new ProgressDialog(SplashActivity.this);
         mDialog.setMessage("Retrieving data...");
         mDialog.show();
-
-        String accesstoken = loginResult.getAccessToken().getToken();
 
         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
           @Override
@@ -220,20 +219,18 @@ public class SplashActivity extends AppCompatActivity {
                   final View register_layout = LayoutInflater.from(SplashActivity.this)
                           .inflate(R.layout.register_number, null);
 
-                  new MaterialStyledDialog.Builder(SplashActivity.this)
+                  new AlertDialog.Builder(SplashActivity.this)
+                          .setView(register_layout)
                           .setTitle("REGISTRATION")
-                          .setCustomView(register_layout)
-                          .setNegativeText("CANCEL")
-                          .onNegative(new MaterialDialog.SingleButtonCallback() {
+                          .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            public void onClick(DialogInterface dialog, int which) {
                               dialog.dismiss();
                             }
                           })
-                          .setPositiveText("REGISTER")
-                          .onPositive(new MaterialDialog.SingleButtonCallback() {
+                          .setPositiveButton("register", new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                            public void onClick(DialogInterface dialog, int which) {
                               MaterialEditText edt_register_number = (MaterialEditText)register_layout.findViewById(R.id.edt_number);
 
                               if(TextUtils.isEmpty(edt_register_number.getText().toString())){
@@ -243,11 +240,13 @@ public class SplashActivity extends AppCompatActivity {
                               Toast.makeText(SplashActivity.this, ""+edt_register_number.getText().toString(), Toast.LENGTH_SHORT).show();
                               registerNumber(fb_id,edt_register_number.getText().toString());
                             }
-                          }).show();
+                          })
+                          .show();
                 }
               }
             }));
   }
+
   private void loginUser(String id) {
     compositeDisposable.add(iMyService.loginUser(id)
             .subscribeOn(Schedulers.io())
@@ -269,8 +268,6 @@ public class SplashActivity extends AppCompatActivity {
               @Override
               public void accept(String response) throws Exception {
                 Toast.makeText(SplashActivity.this, "등록 완료!", Toast.LENGTH_SHORT).show();
-
-                new_user = false;
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
               }
