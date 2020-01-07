@@ -1,12 +1,15 @@
 package com.example.mad_camp_week2;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 import com.example.mad_camp_week2.adapters.ViewPagerAdapter;
 import com.example.mad_camp_week2.fragments.FragmentContacts;
@@ -36,24 +39,20 @@ public class MainActivity extends AppCompatActivity {
 
         backPressCloseHandler = new BackPressCloseHandler(this);
 
-        Intent intent = new Intent();
-
         tabLayout = findViewById(R.id.tablayout);
         viewPager = findViewById(R.id.viewpager);
-
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         adapter.addFragment(fragmentContacts, "Contacts");
         adapter.addFragment(fragmentGallery, "Images");
-        adapter.addFragment(fragmentFav, "Game");
+        adapter.addFragment(fragmentFav, "Game"); // 초기 알게임화면
 
         viewPager.setAdapter(adapter);
         viewPager.setOffscreenPageLimit(3);
-
         tabLayout.setupWithViewPager(viewPager);
-    }
 
+    }
     public class BackPressCloseHandler{
 
         private long backKeyPressedTime = 0;
