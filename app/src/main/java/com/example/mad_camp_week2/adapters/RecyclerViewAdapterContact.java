@@ -160,7 +160,7 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
 
                     }
                 }));
@@ -172,7 +172,7 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
                     }
                 }));
     }
@@ -183,7 +183,7 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
                         setlikeU(myfacebook_id,response.replace("\"", "")+id_U+":");
                     }
                 }));
@@ -195,7 +195,7 @@ public class RecyclerViewAdapterContact extends RecyclerView.Adapter<RecyclerVie
                 .subscribe(new Consumer<String>() {
                     @Override
                     public void accept(String response) throws Exception {
-                        Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, ""+response, Toast.LENGTH_SHORT).show();
                         setlikeU(myfacebook_id,response.replace("\"", "").replace(id_U+":", ""));
                     }
                 }));

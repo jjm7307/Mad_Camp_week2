@@ -4,6 +4,7 @@ package com.example.mad_camp_week2.fragments;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +69,28 @@ public class FragmentFav extends Fragment {
             @Override
             public void onClick(View v) {
                 count++;
+                int delay = 150;
+                ObjectAnimator animation = ObjectAnimator.ofFloat(imageView, "rotation",0f,10f);
+                animation.setDuration(delay);
+                animation.setStartDelay(delay*0);
+                animation.start();
+
+                ObjectAnimator animation1 = ObjectAnimator.ofFloat(imageView, "rotation",10f,-10f);
+                animation1.setDuration(delay);
+                animation1.setStartDelay(delay*1);
+                animation1.start();
+                checkCount();
+
+                ObjectAnimator animation2 = ObjectAnimator.ofFloat(imageView, "rotation",-10f,7f);
+                animation2.setDuration(delay);
+                animation2.setStartDelay(delay*2);
+                animation2.start();
+                checkCount();
+
+                ObjectAnimator animation3 = ObjectAnimator.ofFloat(imageView, "rotation",7f,0f);
+                animation3.setDuration(delay);
+                animation3.setStartDelay(delay*3);
+                animation3.start();
                 checkCount();
             }
         });
@@ -89,6 +112,7 @@ public class FragmentFav extends Fragment {
             public void onClick(View v) {
                 // restart버튼 누르면 count초기화하고 checkCount호출
                 count = 0;
+
                 checkCount();
             }
         });
